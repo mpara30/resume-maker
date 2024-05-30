@@ -34,16 +34,30 @@ public class ResumeGeneratorService {
         loadHtmlTemplates();
 
         String finalResume = resumeHtml.replace("{{personal_data}}", buildPersonalDataSection(personalDataHtml))
-                .replace("{{education_section}}", buildEducationSection(educationHtml));
+                .replace("{{education_section}}", buildEducationSection(educationHtml))
+                .replace("{{work_section}}", buildWorkSection(workHtml));
 
 
         System.out.println(finalResume);
     }
 
-    private String buildEducationSection(String education) {
+    private String buildWorkSection(String workHtml) {
+        StringBuilder sb =  new StringBuilder();
+        for (int i = 0; i < jsonData.getWork().size(); i++) {
+            String workElement = workHtml.replace("{{work_position}}", jsonData.getWork().get(i).getPosition())
+                    .replace("{{work_company}}", jsonData.getWork().get(i).getCompany())
+                    .replace("{{work_location}}", jsonData.getWork().get(i).getLocation())
+                    .replace("{{work_startDate}}", jsonData.getWork().get(i).getStartDate())
+                    .replace("{{work_endDate}}", jsonData.getWork().get(i).getEndDate());
+            sb.append(workElement);
+        }
+        return sb.toString();
+    }
+
+    private String buildEducationSection(String educationHtml) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < jsonData.getEducation().size(); i++) {
-            String educationElement = education.replace("{{education_institution}}", jsonData.getEducation().get(i).getInstitution())
+            String educationElement = educationHtml.replace("{{education_institution}}", jsonData.getEducation().get(i).getInstitution())
                     .replace("{{education_location}}", jsonData.getEducation().get(i).getLocation())
                     .replace("{{education_studyType}}", jsonData.getEducation().get(i).getStudyType())
                     .replace("{{education_area}}", jsonData.getEducation().get(i).getArea())
@@ -54,8 +68,8 @@ public class ResumeGeneratorService {
         return sb.toString();
     }
 
-    private String buildPersonalDataSection(String personalData) {
-        return personalData.replace("{{personal_data_name}}", jsonData.getPersonal_data().getName())
+    private String buildPersonalDataSection(String personalDataHtml) {
+        return personalDataHtml.replace("{{personal_data_name}}", jsonData.getPersonal_data().getName())
                 .replace("{{personal_data_email}}", jsonData.getPersonal_data().getEmail())
                 .replace("{{personal_data_phone}}", jsonData.getPersonal_data().getPhone())
                 .replace("{{personal_data_address}}", jsonData.getPersonal_data().getLocation().getAddress())
