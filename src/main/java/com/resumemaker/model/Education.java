@@ -11,6 +11,5 @@ public class Education {
     private String area;
     private String startDate;
     private String endDate;
-    private String gpa;
     private String studyType;
 }
