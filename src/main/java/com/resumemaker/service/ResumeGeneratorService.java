@@ -1,5 +1,12 @@
 package com.resumemaker.service;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
 import com.resumemaker.model.Data;
 import com.resumemaker.repository.ResumeRepo;
 import com.resumemaker.util.Constants;
@@ -7,6 +14,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,16 +42,68 @@ public class ResumeGeneratorService {
         loadHtmlTemplates();
 
         String finalResume = resumeHtml.replace("{{personal_data}}", buildPersonalDataSection(personalDataHtml))
-                .replace("{{education_section}}", buildEducationSection(educationHtml));
-
+                .replace("{{education_section}}", buildEducationSection(educationHtml))
+                .replace("{{work_section}}", buildWorkSection(workHtml))
+                .replace("{{skills_section}}", buildSkillsSection(skillsHtml));
 
         System.out.println(finalResume);
+        createPdfFile(finalResume);
     }
 
-    private String buildEducationSection(String education) {
+    private void createPdfFile(String finalResume) {
+        ConverterProperties converterProperties = new ConverterProperties();
+
+        PdfWriter pdfWriter;
+
+        try {
+            pdfWriter = new PdfWriter("src/main/resources/resume.pdf");
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
+            return;
+        }
+
+        PdfDocument pdfDoc = new PdfDocument(pdfWriter);
+        pdfDoc.setDefaultPageSize(PageSize.A4);
+        Document document = new Document(pdfDoc);
+
+        HtmlConverter.convertToElements(finalResume).forEach(e -> document.add((IBlockElement) e));
+        document.close();
+    }
+
+    private String buildSkillsSection(String skillsHtml) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < jsonData.getSkills().size(); i++) {
+            String skillsElement = skillsHtml.replace("{{skills_name}}", jsonData.getSkills().get(i).getName())
+                    .replace("{{skills_keywords}}",
+                            jsonData.getSkills().get(i).getKeywords().toString()
+                                    .replace("[","")
+                                    .replace("]","")); //TODO adapt;
+            sb.append(skillsElement);
+        }
+        return sb.toString();
+    }
+
+    private String buildWorkSection(String workHtml) {
+        StringBuilder sb =  new StringBuilder();
+        for (int i = 0; i < jsonData.getWork().size(); i++) {
+            String workElement = workHtml.replace("{{work_position}}", jsonData.getWork().get(i).getPosition())
+                    .replace("{{work_company}}", jsonData.getWork().get(i).getCompany())
+                    .replace("{{work_location}}", jsonData.getWork().get(i).getLocation())
+                    .replace("{{work_startDate}}", jsonData.getWork().get(i).getStartDate())
+                    .replace("{{work_endDate}}", jsonData.getWork().get(i).getEndDate())
+                    .replace("{{work_highlights}}",
+                            jsonData.getWork().get(i).getHighlights().toString()
+                                    .replace("[","")
+                                    .replace("]","")); //TODO adapt
+            sb.append(workElement);
+        }
+        return sb.toString();
+    }
+
+    private String buildEducationSection(String educationHtml) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < jsonData.getEducation().size(); i++) {
-            String educationElement = education.replace("{{education_institution}}", jsonData.getEducation().get(i).getInstitution())
+            String educationElement = educationHtml.replace("{{education_institution}}", jsonData.getEducation().get(i).getInstitution())
                     .replace("{{education_location}}", jsonData.getEducation().get(i).getLocation())
                     .replace("{{education_studyType}}", jsonData.getEducation().get(i).getStudyType())
                     .replace("{{education_area}}", jsonData.getEducation().get(i).getArea())
@@ -54,8 +114,8 @@ public class ResumeGeneratorService {
         return sb.toString();
     }
 
-    private String buildPersonalDataSection(String personalData) {
-        return personalData.replace("{{personal_data_name}}", jsonData.getPersonal_data().getName())
+    private String buildPersonalDataSection(String personalDataHtml) {
+        return personalDataHtml.replace("{{personal_data_name}}", jsonData.getPersonal_data().getName())
                 .replace("{{personal_data_email}}", jsonData.getPersonal_data().getEmail())
                 .replace("{{personal_data_phone}}", jsonData.getPersonal_data().getPhone())
                 .replace("{{personal_data_address}}", jsonData.getPersonal_data().getLocation().getAddress())
