@@ -35,10 +35,23 @@ public class ResumeGeneratorService {
 
         String finalResume = resumeHtml.replace("{{personal_data}}", buildPersonalDataSection(personalDataHtml))
                 .replace("{{education_section}}", buildEducationSection(educationHtml))
-                .replace("{{work_section}}", buildWorkSection(workHtml));
-
+                .replace("{{work_section}}", buildWorkSection(workHtml))
+                .replace("{{skills_section}}", buildSkillsSection(skillsHtml));
 
         System.out.println(finalResume);
+    }
+
+    private String buildSkillsSection(String skillsHtml) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < jsonData.getSkills().size(); i++) {
+            String skillsElement = skillsHtml.replace("{{skills_name}}", jsonData.getSkills().get(i).getName())
+                    .replace("{{skills_keywords}}",
+                            jsonData.getSkills().get(i).getKeywords().toString()
+                                    .replace("[","")
+                                    .replace("]","")); //TODO adapt;
+            sb.append(skillsElement);
+        }
+        return sb.toString();
     }
 
     private String buildWorkSection(String workHtml) {
@@ -52,7 +65,7 @@ public class ResumeGeneratorService {
                     .replace("{{work_highlights}}",
                             jsonData.getWork().get(i).getHighlights().toString()
                                     .replace("[","")
-                                    .replace("]",""));
+                                    .replace("]","")); //TODO adapt
             sb.append(workElement);
         }
         return sb.toString();
