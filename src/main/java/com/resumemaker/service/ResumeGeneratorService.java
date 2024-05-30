@@ -1,5 +1,12 @@
 package com.resumemaker.service;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
 import com.resumemaker.model.Data;
 import com.resumemaker.repository.ResumeRepo;
 import com.resumemaker.util.Constants;
@@ -7,6 +14,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,6 +47,27 @@ public class ResumeGeneratorService {
                 .replace("{{skills_section}}", buildSkillsSection(skillsHtml));
 
         System.out.println(finalResume);
+        createPdfFile(finalResume);
+    }
+
+    private void createPdfFile(String finalResume) {
+        ConverterProperties converterProperties = new ConverterProperties();
+
+        PdfWriter pdfWriter;
+
+        try {
+            pdfWriter = new PdfWriter("src/main/resources/resume.pdf");
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
+            return;
+        }
+
+        PdfDocument pdfDoc = new PdfDocument(pdfWriter);
+        pdfDoc.setDefaultPageSize(PageSize.A4);
+        Document document = new Document(pdfDoc);
+
+        HtmlConverter.convertToElements(finalResume).forEach(e -> document.add((IBlockElement) e));
+        document.close();
     }
 
     private String buildSkillsSection(String skillsHtml) {

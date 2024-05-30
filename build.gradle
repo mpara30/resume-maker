@@ -18,6 +18,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.1'
+	implementation group: 'org.xhtmlrenderer', name: 'flying-saucer-pdf-openpdf', version: '9.1.22'
+	implementation group: 'com.lowagie', name: 'itext', version: '2.1.7'
+	implementation group: 'com.itextpdf', name: 'html2pdf', version: '5.0.4'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'junit:junit:4.13.1'
