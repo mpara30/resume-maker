@@ -13,7 +13,7 @@ public class ResumeRepo {
     @Autowired
     private ObjectMapper mapper;
 
-    public Data getData() throws IOException {
-        return mapper.readValue(new File("src/main/resources/new_resume.json"), Data.class);
+    public Data getData(String path) throws IOException {
+        return mapper.readValue(new File(path), Data.class);
     }
 }

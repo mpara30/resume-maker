@@ -11,12 +11,13 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class ResumeGeneratorService {
+    private static final String resumePath = "src/main/resources/new_resume.json";
     @Resource()
     private ResumeRepo resumeRepo;
     private Data jsonData;
     public void generateResume() {
         try {
-            jsonData = resumeRepo.getData();
+            jsonData = resumeRepo.getData(resumePath);
             System.out.println(jsonData.toString());
         } catch (IOException e) {
             log.error(e.getMessage());
