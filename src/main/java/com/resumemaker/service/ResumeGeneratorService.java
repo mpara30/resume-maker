@@ -48,7 +48,11 @@ public class ResumeGeneratorService {
                     .replace("{{work_company}}", jsonData.getWork().get(i).getCompany())
                     .replace("{{work_location}}", jsonData.getWork().get(i).getLocation())
                     .replace("{{work_startDate}}", jsonData.getWork().get(i).getStartDate())
-                    .replace("{{work_endDate}}", jsonData.getWork().get(i).getEndDate());
+                    .replace("{{work_endDate}}", jsonData.getWork().get(i).getEndDate())
+                    .replace("{{work_highlights}}",
+                            jsonData.getWork().get(i).getHighlights().toString()
+                                    .replace("[","")
+                                    .replace("]",""));
             sb.append(workElement);
         }
         return sb.toString();
