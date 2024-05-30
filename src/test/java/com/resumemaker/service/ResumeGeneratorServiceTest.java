@@ -2,7 +2,6 @@ package com.resumemaker.service;
 
 import com.resumemaker.model.Data;
 import com.resumemaker.repository.ResumeRepo;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
