@@ -1,0 +1,82 @@
+{
+  "personal_data": {
+    "name": "John Doe",
+    "email": "john.doe@gmail.com",
+    "phone": "55771 54",
+    "location": {
+      "address": "Bucharest, RO"
+    },
+    "website": "https://www.linkedin.com/"
+  },
+  "education": [
+    {
+      "institution": "University POLITEHNICA of Bucharest",
+      "location": "Bucharest, RO",
+      "area": "Mechatronics and Robotics",
+      "startDate": "Sep 2015",
+      "endDate": "Jun 2025",
+      "gpa": "",
+      "studyType": "BS"
+    }
+  ],
+  "work": [
+    {
+      "company": "Deloitte Digital",
+      "location": "Bucharest, RO",
+      "position": "Software Engineer",
+      "website": "",
+      "startDate": "Jan 2023",
+      "endDate": "Present",
+      "highlights": ["Some other company highlights"]
+    },
+    {
+      "highlights": [
+        "Some highlights"
+      ],
+      "company": "Microsoft",
+      "position": "Software Developer",
+      "location": "Bucharest, RO",
+      "startDate": "Aug 2016",
+      "endDate": "Jan 2023"
+    }
+  ],
+  "skills": [
+    {
+      "keywords": [
+        "Java",
+        "Quarkus",
+        "Spring",
+        "JavaScript ",
+        "HTML",
+        "CSS"
+      ],
+      "name": "Programming Languages"
+    },
+    {
+      "keywords": [
+        "Openshift",
+        "AWS",
+        "GCP"
+      ],
+      "name": "Cloud"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Some project",
+      "description": "Some description",
+      "url": "",
+      "keywords": [
+        "C#",
+        "Angular"
+      ]
+    }
+  ],
+  "certificates": [
+    {
+      "title": "AWS Certified Cloud Practitioner",
+      "date": "2020",
+      "awarder": "AWS"
+    }
+  ]
+}
