@@ -44,15 +44,15 @@ public class ResumeGeneratorService {
         String finalResume = resumeHtml.replace("{{personal_data}}", buildPersonalDataSection(personalDataHtml))
                 .replace("{{education_section}}", buildEducationSection(educationHtml))
                 .replace("{{work_section}}", buildWorkSection(workHtml))
-                .replace("{{skills_section}}", buildSkillsSection(skillsHtml));
+                .replace("{{skills_section}}", buildSkillsSection(skillsHtml))
+                .replace("{{projects_section}}", buildProjectsSection(projectsHtml))
+                .replace("{{certificates_section}}", buildCertificatesSection(certificatesHtml));
 
         System.out.println(finalResume);
         createPdfFile(finalResume);
     }
 
     private void createPdfFile(String finalResume) {
-        ConverterProperties converterProperties = new ConverterProperties();
-
         PdfWriter pdfWriter;
 
         try {
@@ -68,6 +68,31 @@ public class ResumeGeneratorService {
 
         HtmlConverter.convertToElements(finalResume).forEach(e -> document.add((IBlockElement) e));
         document.close();
+    }
+
+    private String buildCertificatesSection(String certificatesHtml) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < jsonData.getCertificates().size(); i++) {
+            String certificateElement = certificatesHtml.replace("{{certificate_title}}", jsonData.getCertificates().get(i).getTitle())
+                    .replace("{{certificate_date}}", jsonData.getCertificates().get(i).getDate())
+                    .replace("{{certificate_awarder}}", jsonData.getCertificates().get(i).getAwarder());
+            sb.append(certificateElement);
+        }
+        return sb.toString();
+    }
+
+    private String buildProjectsSection(String projectsHtml) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < jsonData.getProjects().size(); i++) {
+            String projectElement = projectsHtml.replace("{{project_name}}", jsonData.getProjects().get(i).getName())
+                    .replace("{{project_keywords}}",
+                            jsonData.getProjects().get(i).getKeywords().toString()
+                                    .replace("[","")
+                                    .replace("]","")) //TODO adapt
+                    .replace("{{project_description}}", jsonData.getProjects().get(i).getDescription());
+            sb.append(projectElement);
+        }
+        return sb.toString();
     }
 
     private String buildSkillsSection(String skillsHtml) {
