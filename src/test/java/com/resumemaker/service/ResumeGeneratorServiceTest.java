@@ -68,6 +68,11 @@ public class ResumeGeneratorServiceTest {
 
         PersonalData personalData = new PersonalData("John Doe", "john.doe@example.com", "1234567890", new Location("123 Main St"), "www.example.com");
         when(testData.getPersonal_data()).thenReturn(personalData);
+
+        when(testData.getProjects())
+                .thenReturn(List.of(new Projects("Resume Generator", "Some description", List.of("Java", "Spring"))));
+        when(testData.getCertificates())
+                .thenReturn(List.of(new Certificates("AWS Cloud Practitioner", "2022", "AWS")));
     }
 
 }
